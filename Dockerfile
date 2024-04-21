@@ -1,4 +1,18 @@
 FROM eclipse-temurin:20-jdk-alpine as build
-COPY --from=build /target/demo-0.0.1-SNAPSHOT.jar app.jar
+
+#Copythe application code into the image
+COPY . /usr/src/my-app
+
+# Set the working directory
+WORKDIR /usr/src/my-app
+
+#Build the application using gradle
+RUN gradle build
+
+# Copy the built application into the image
+COPY --from=build /build/libs/*.jar app.jar
+
+# Expose the application port
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Set the entrypoint for
